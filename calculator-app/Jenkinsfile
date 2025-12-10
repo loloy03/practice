@@ -2,13 +2,13 @@ pipeline {
     agent any
 
     tools {
-        nodejs 'Node 18' // Must match your Jenkins NodeJS tool name
+        nodejs 'Node 18' // Must match your NodeJS installation in Jenkins
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/loloy03/practice.git'
+                git branch: 'main', url: '<your-repo-url>'
             }
         }
 
@@ -27,6 +27,15 @@ pipeline {
         stage('Archive') {
             steps {
                 archiveArtifacts artifacts: 'build/**', allowEmptyArchive: true
+            }
+        }
+
+        stage('Serve') {
+            steps {
+                // Install serve globally if not installed
+                sh 'npm install -g serve'
+                // Start the server in the background
+                sh 'nohup serve -s build -l 5000 &'
             }
         }
     }
